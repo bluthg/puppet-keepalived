@@ -81,17 +81,17 @@
 #   Authentication password.
 #
 # @param track_script
-#   Define which script to run to track service states.
+#   Define which scripts to run to track service states.
+#   Must be specified as an Array of Strings with multiple Scriptnames.
 #
 # @param track_process
 #   Define which process trackers to run.
 #
 # @param track_file
-#   Define which file trackers to run (array).
+#   Define which file trackers to run. References a track_file block that can be created with keepalived::vrrp::track_file.
 #
 # @param vrrp_track_file
-#   Define which file trackers to run (array).
-#   Deprecated, for keepalived < 2.1.0
+#   Define which file trackers to run. Deprecated, for keepalived < 2.1.0. References a vrrp_track_file block that can be created with keepalived::vrrp::vrrp_track_file.
 #
 # @param track_interface
 #   Define which interface(s) to monitor.
@@ -206,17 +206,17 @@ define keepalived::vrrp::instance (
   $virtual_ipaddress                                                      = undef,
   $auth_type                                                              = undef,
   Optional[Variant[String, Sensitive[String]]] $auth_pass                 = undef,
-  $track_script                                                           = undef,
-  Optional[Array[String[1]]] $track_process                               = undef,
-  Optional[Array[Stdlib::Absolutepath]] $track_file                       = undef,
-  Optional[Array[Stdlib::Absolutepath]] $vrrp_track_file                  = undef,
-  $track_interface                                                        = undef,
+  Array[String[1]] $track_script                                          = [],
+  Array[String[1]] $track_process                                         = [],
+  Array[String[1]] $track_file                                            = [],
+  Array[String[1]] $vrrp_track_file                                       = [],
+  Array[String[1]] $track_interface                                       = [],
   $lvs_interface                                                          = undef,
   $virtual_ipaddress_int                                                  = undef,
   $virtual_ipaddress_excluded                                             = undef,
   Boolean $promote_secondaries                                            = false,
   $virtual_routes                                                         = undef,
-  Optional[Array[Keepalived::Vrrp::Instance::VRule]] $virtual_rules       = undef,
+  Array[Keepalived::Vrrp::Instance::VRule] $virtual_rules                 = [],
   $smtp_alert                                                             = false,
   $nopreempt                                                              = false,
   $preempt_delay                                                          = undef,
@@ -241,7 +241,8 @@ define keepalived::vrrp::instance (
   Boolean $use_vmac_addr                                                  = false,
   Boolean $native_ipv6                                                    = false,
 ) {
-  $_name = regsubst($name, '[:\/\n]', '')
+  $_name = regsubst($name, '[:\/\n]', '', 'G')
+  $_ordersafe = regsubst($_name, '-', '', 'G')
   $unicast_peer_array = [$unicast_peers].flatten
   $auth_pass_unsensitive = if $auth_pass =~ Sensitive {
     $auth_pass.unwrap
@@ -249,17 +250,11 @@ define keepalived::vrrp::instance (
     $auth_pass
   }
 
-  concat::fragment { "keepalived.conf_vrrp_instance_${_name}":
-    target  => "${keepalived::config_dir}/keepalived.conf",
-    content => template('keepalived/vrrp_instance.erb'),
-    order   => "100-${_name}-000",
-  }
-
   if size($unicast_peer_array) > 0 or $collect_unicast_peers {
     concat::fragment { "keepalived.conf_vrrp_instance_${_name}_upeers_header":
       target  => "${keepalived::config_dir}/keepalived.conf",
       content => "  unicast_peer {\n",
-      order   => "100-${_name}-010",
+      order   => "100-${_ordersafe}-010",
     }
 
     if $collect_unicast_peers {
@@ -273,7 +268,7 @@ define keepalived::vrrp::instance (
         instance   => $name,
         ip_address => $unicast_src,
       }
-      Keepalived::Vrrp::Unicast_peer <<| instance == $name and title != $unicast_src |>>
+      Keepalived::Vrrp::Unicast_peer <<| instance == $name and ip_address != $unicast_src |>>
     }
 
     if size($unicast_peer_array) > 0 {
@@ -288,13 +283,24 @@ define keepalived::vrrp::instance (
     concat::fragment { "keepalived.conf_vrrp_instance_${_name}_upeers_footer":
       target  => "${keepalived::config_dir}/keepalived.conf",
       content => "  }\n\n",
-      order   => "100-${_name}-030",
+      order   => "100-${_ordersafe}-030",
     }
+  }
+
+  $_content = if $auth_pass =~ Sensitive {
+    Sensitive(template('keepalived/vrrp_instance.erb'))
+  } else {
+    template('keepalived/vrrp_instance.erb')
+  }
+  concat::fragment { "keepalived.conf_vrrp_instance_${_name}":
+    target  => "${keepalived::config_dir}/keepalived.conf",
+    content => $_content,
+    order   => "100-${_ordersafe}-000",
   }
 
   concat::fragment { "keepalived.conf_vrrp_instance_${_name}_footer":
     target  => "${keepalived::config_dir}/keepalived.conf",
     content => "}\n\n",
-    order   => "100-${_name}-zzz",
+    order   => "100-${_ordersafe}-zzz",
   }
 }

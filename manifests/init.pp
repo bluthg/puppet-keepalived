@@ -37,6 +37,8 @@
 #
 # @param service_restart
 #
+# @param global_defs
+#
 # @param vrrp_instance
 #
 # @param vrrp_script
@@ -56,8 +58,8 @@
 class keepalived (
   String[1] $sysconf_dir,
   String    $sysconf_options,
-  Boolean   $service_hasrestart,
-  Boolean   $service_hasstatus,
+  Optional[Boolean] $service_hasrestart = undef,
+  Optional[Boolean] $service_hasstatus = undef,
 
   Stdlib::Absolutepath $config_dir       = '/etc/keepalived',
   Stdlib::Filemode     $config_dir_mode  = '0755',
@@ -81,12 +83,13 @@ class keepalived (
 
   Boolean                 $manage_package     = true,
 
-  Hash $vrrp_instance      = {},
-  Hash $vrrp_script        = {},
-  Hash $vrrp_track_process = {},
-  Hash $vrrp_sync_group    = {},
-  Hash $lvs_real_server    = {},
-  Hash $lvs_virtual_server = {},
+  Optional[Hash] $global_defs = undef,
+  Hash $vrrp_instance         = {},
+  Hash $vrrp_script           = {},
+  Hash $vrrp_track_process    = {},
+  Hash $vrrp_sync_group       = {},
+  Hash $lvs_real_server       = {},
+  Hash $lvs_virtual_server    = {},
 ) {
   contain keepalived::install
   contain keepalived::config

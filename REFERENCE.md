@@ -36,6 +36,7 @@ Work in progress, supports:
 
 ### Data types
 
+* [`Keepalived::Global_defs::Lvs_sync_daemon`](#Keepalived--Global_defs--Lvs_sync_daemon): Defines parameters for lvs_sync_daemon as documented in `man 5 keepalived.conf`
 * [`Keepalived::Options`](#Keepalived--Options): keepalived::options
 * [`Keepalived::Vrrp::Instance::VRule`](#Keepalived--Vrrp--Instance--VRule): Translates directly to rules to be added as per `ip-rule(8)`
 
@@ -67,6 +68,7 @@ The following parameters are available in the `keepalived` class:
 * [`service_manage`](#-keepalived--service_manage)
 * [`service_name`](#-keepalived--service_name)
 * [`service_restart`](#-keepalived--service_restart)
+* [`global_defs`](#-keepalived--global_defs)
 * [`vrrp_instance`](#-keepalived--vrrp_instance)
 * [`vrrp_script`](#-keepalived--vrrp_script)
 * [`vrrp_track_process`](#-keepalived--vrrp_track_process)
@@ -178,15 +180,19 @@ Default value: `'running'`
 
 ##### <a name="-keepalived--service_hasrestart"></a>`service_hasrestart`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 
+
+Default value: `undef`
 
 ##### <a name="-keepalived--service_hasstatus"></a>`service_hasstatus`
 
-Data type: `Boolean`
+Data type: `Optional[Boolean]`
 
 
+
+Default value: `undef`
 
 ##### <a name="-keepalived--service_manage"></a>`service_manage`
 
@@ -207,6 +213,14 @@ Default value: `'keepalived'`
 ##### <a name="-keepalived--service_restart"></a>`service_restart`
 
 Data type: `Optional[String[1]]`
+
+
+
+Default value: `undef`
+
+##### <a name="-keepalived--global_defs"></a>`global_defs`
+
+Data type: `Optional[Hash]`
 
 
 
@@ -331,6 +345,7 @@ The following parameters are available in the `keepalived::global_defs` class:
 * [`dynamic_interfaces`](#-keepalived--global_defs--dynamic_interfaces)
 * [`vrrp_notify_fifo`](#-keepalived--global_defs--vrrp_notify_fifo)
 * [`vrrp_notify_fifo_script`](#-keepalived--global_defs--vrrp_notify_fifo_script)
+* [`lvs_sync_daemon`](#-keepalived--global_defs--lvs_sync_daemon)
 
 ##### <a name="-keepalived--global_defs--notification_email"></a>`notification_email`
 
@@ -673,6 +688,14 @@ Default value: `undef`
 Data type: `Optional[Stdlib::Absolutepath]`
 
 Set the vrrp_notify_fifo_script option.
+
+Default value: `undef`
+
+##### <a name="-keepalived--global_defs--lvs_sync_daemon"></a>`lvs_sync_daemon`
+
+Data type: `Optional[Keepalived::Global_defs::Lvs_sync_daemon]`
+
+Set the lvs_sync_daemon option.
 
 Default value: `undef`
 
@@ -1155,11 +1178,11 @@ Default value: `undef`
 
 ##### <a name="-keepalived--vrrp--instance--virtual_rules"></a>`virtual_rules`
 
-Data type: `Optional[Array[Keepalived::Vrrp::Instance::VRule]]`
+Data type: `Array[Keepalived::Vrrp::Instance::VRule]`
 
 Set floating rules.
 
-Default value: `undef`
+Default value: `[]`
 
 ##### <a name="-keepalived--vrrp--instance--virtual_ipaddress_excluded"></a>`virtual_ipaddress_excluded`
 
@@ -1196,40 +1219,40 @@ Default value: `undef`
 
 ##### <a name="-keepalived--vrrp--instance--track_script"></a>`track_script`
 
-Data type: `Any`
+Data type: `Array[String[1]]`
 
-Define which script to run to track service states.
+Define which scripts to run to track service states.
+Must be specified as an Array of Strings with multiple Scriptnames.
 
-Default value: `undef`
+Default value: `[]`
 
 ##### <a name="-keepalived--vrrp--instance--track_process"></a>`track_process`
 
-Data type: `Optional[Array[String[1]]]`
+Data type: `Array[String[1]]`
 
 Define which process trackers to run.
 
-Default value: `undef`
+Default value: `[]`
 
 ##### <a name="-keepalived--vrrp--instance--track_file"></a>`track_file`
 
-Data type: `Optional[Array[Stdlib::Absolutepath]]`
+Data type: `Array[String[1]]`
 
-Define which file trackers to run (array).
+Define which file trackers to run. References a track_file block that can be created with keepalived::vrrp::track_file.
 
-Default value: `undef`
+Default value: `[]`
 
 ##### <a name="-keepalived--vrrp--instance--vrrp_track_file"></a>`vrrp_track_file`
 
-Data type: `Optional[Array[Stdlib::Absolutepath]]`
+Data type: `Array[String[1]]`
 
-Define which file trackers to run (array).
-Deprecated, for keepalived < 2.1.0
+Define which file trackers to run. Deprecated, for keepalived < 2.1.0. References a vrrp_track_file block that can be created with keepalived::vrrp::vrrp_track_file.
 
-Default value: `undef`
+Default value: `[]`
 
 ##### <a name="-keepalived--vrrp--instance--track_interface"></a>`track_interface`
 
-Data type: `Any`
+Data type: `Array[String[1]]`
 
 Define which interface(s) to monitor.
 Go to FAULT state if one of
@@ -1238,7 +1261,7 @@ May be specified as either:
   a) interface name
   b) array of interfaces names
 
-Default value: `undef`
+Default value: `[]`
 
 ##### <a name="-keepalived--vrrp--instance--lvs_interface"></a>`lvs_interface`
 
@@ -1478,6 +1501,7 @@ The following parameters are available in the `keepalived::vrrp::script` defined
 * [`user`](#-keepalived--vrrp--script--user)
 * [`group`](#-keepalived--vrrp--script--group)
 * [`no_weight`](#-keepalived--vrrp--script--no_weight)
+* [`init_fail`](#-keepalived--vrrp--script--init_fail)
 
 ##### <a name="-keepalived--vrrp--script--interval"></a>`interval`
 
@@ -1549,6 +1573,14 @@ Data type: `Any`
 
 Default value: `false`
 
+##### <a name="-keepalived--vrrp--script--init_fail"></a>`init_fail`
+
+Data type: `Any`
+
+assume script initially is in failed state if true.
+
+Default value: `false`
+
 ### <a name="keepalived--vrrp--sync_group"></a>`keepalived::vrrp::sync_group`
 
 Configure the group for instance
@@ -1560,6 +1592,7 @@ The following parameters are available in the `keepalived::vrrp::sync_group` def
 * [`group`](#-keepalived--vrrp--sync_group--group)
 * [`notify_script_master`](#-keepalived--vrrp--sync_group--notify_script_master)
 * [`track_script`](#-keepalived--vrrp--sync_group--track_script)
+* [`track_process`](#-keepalived--vrrp--sync_group--track_process)
 * [`notify_script_backup`](#-keepalived--vrrp--sync_group--notify_script_backup)
 * [`notify_script_fault`](#-keepalived--vrrp--sync_group--notify_script_fault)
 * [`notify_script`](#-keepalived--vrrp--sync_group--notify_script)
@@ -1588,6 +1621,14 @@ Default value: `undef`
 Data type: `Array[String]`
 
 Define which script to run to track service states.
+
+Default value: `[]`
+
+##### <a name="-keepalived--vrrp--sync_group--track_process"></a>`track_process`
+
+Data type: `Array[String]`
+
+Define which process check to run to track processes.
 
 Default value: `[]`
 
@@ -1834,6 +1875,24 @@ This causes VALUE (default 0) to be written to
 Default value: `false`
 
 ## Data types
+
+### <a name="Keepalived--Global_defs--Lvs_sync_daemon"></a>`Keepalived::Global_defs::Lvs_sync_daemon`
+
+Defines parameters for lvs_sync_daemon as documented in `man 5 keepalived.conf`
+
+Alias of
+
+```puppet
+Struct[{
+    interface        => String[1],
+    vrrp_instance    => String[1],
+    Optional[id]     => Integer[0, 255],
+    Optional[maxlen] => Integer[1, 65507],
+    Optional[port]   => Stdlib::Port,
+    Optional[ttl]    => Integer[1, 255],
+    Optional[group]  => Stdlib::IP::Address,
+}]
+```
 
 ### <a name="Keepalived--Options"></a>`Keepalived::Options`
 

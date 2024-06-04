@@ -4,6 +4,89 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v5.1.0](https://github.com/voxpupuli/puppet-keepalived/tree/v5.1.0) (2024-04-16)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-keepalived/compare/v5.0.0...v5.1.0)
+
+**Implemented enhancements:**
+
+- Add OracleLinux Support [\#334](https://github.com/voxpupuli/puppet-keepalived/pull/334) ([bastelfreak](https://github.com/bastelfreak))
+- Add Rocky Support [\#333](https://github.com/voxpupuli/puppet-keepalived/pull/333) ([bastelfreak](https://github.com/bastelfreak))
+- Add AlmaLinux support [\#332](https://github.com/voxpupuli/puppet-keepalived/pull/332) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- service: hasrestart/hasstatus: use Puppet defaults [\#335](https://github.com/voxpupuli/puppet-keepalived/pull/335) ([bastelfreak](https://github.com/bastelfreak))
+- Gentoo/Debian: Enable hasstatus for service [\#331](https://github.com/voxpupuli/puppet-keepalived/pull/331) ([bastelfreak](https://github.com/bastelfreak))
+
+## [v5.0.0](https://github.com/voxpupuli/puppet-keepalived/tree/v5.0.0) (2024-04-02)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-keepalived/compare/v4.1.0...v5.0.0)
+
+**Breaking changes:**
+
+- vrrp::instance::track\_script: Enforce Array datatype 2 [\#329](https://github.com/voxpupuli/puppet-keepalived/pull/329) ([bastelfreak](https://github.com/bastelfreak))
+- Drop Debian 10 support [\#327](https://github.com/voxpupuli/puppet-keepalived/pull/327) ([Valantin](https://github.com/Valantin))
+- vrrp::instance: virtual\_rules: Enforce Array datatype [\#321](https://github.com/voxpupuli/puppet-keepalived/pull/321) ([bastelfreak](https://github.com/bastelfreak))
+- vrrp::instance: track\_interface: Enforce Array datatype [\#320](https://github.com/voxpupuli/puppet-keepalived/pull/320) ([bastelfreak](https://github.com/bastelfreak))
+- vrrp::instance: track\_script: Enforce Array datatype [\#319](https://github.com/voxpupuli/puppet-keepalived/pull/319) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add Ubuntu 22.04 support [\#326](https://github.com/voxpupuli/puppet-keepalived/pull/326) ([Valantin](https://github.com/Valantin))
+- Add EL9 support [\#299](https://github.com/voxpupuli/puppet-keepalived/pull/299) ([bastelfreak](https://github.com/bastelfreak))
+- Add Debian 12 support [\#296](https://github.com/voxpupuli/puppet-keepalived/pull/296) ([bastelfreak](https://github.com/bastelfreak))
+
+**Fixed bugs:**
+
+- vrrp\_instance::track\_script: Fix Datatype-Mismatch [\#322](https://github.com/voxpupuli/puppet-keepalived/pull/322) ([cocker-cc](https://github.com/cocker-cc))
+
+## [v4.1.0](https://github.com/voxpupuli/puppet-keepalived/tree/v4.1.0) (2024-03-12)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-keepalived/compare/v4.0.0...v4.1.0)
+
+**Implemented enhancements:**
+
+- vrrp::instance: track\_script: Add datatype [\#317](https://github.com/voxpupuli/puppet-keepalived/pull/317) ([bastelfreak](https://github.com/bastelfreak))
+- vrrp::instance: track\_process: Switch default undef-\>\[\] [\#316](https://github.com/voxpupuli/puppet-keepalived/pull/316) ([bastelfreak](https://github.com/bastelfreak))
+- vrrp::instance: {vrrp\_,}track\_file: Switch default undef-\>\[\] [\#315](https://github.com/voxpupuli/puppet-keepalived/pull/315) ([bastelfreak](https://github.com/bastelfreak))
+- Add support for track\_process to vrrp\_sync\_group [\#313](https://github.com/voxpupuli/puppet-keepalived/pull/313) ([imp-](https://github.com/imp-))
+- Add support for the init\_fail parameter to keepalived::vrrp::script [\#284](https://github.com/voxpupuli/puppet-keepalived/pull/284) ([ggoas-interop](https://github.com/ggoas-interop))
+
+**Fixed bugs:**
+
+- \(\#310\) {vrrp\_,}track\_file: Enforce only String datatype  [\#312](https://github.com/voxpupuli/puppet-keepalived/pull/312) ([tuxmea](https://github.com/tuxmea))
+- Replace all occurrences of illegal chars in the name var [\#291](https://github.com/voxpupuli/puppet-keepalived/pull/291) ([gerases](https://github.com/gerases))
+
+## [v4.0.0](https://github.com/voxpupuli/puppet-keepalived/tree/v4.0.0) (2024-01-19)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-keepalived/compare/v3.6.0...v4.0.0)
+
+**Breaking changes:**
+
+- Drop EoL Ubuntu 16.04 & 18.04 support [\#294](https://github.com/voxpupuli/puppet-keepalived/pull/294) ([bastelfreak](https://github.com/bastelfreak))
+- Drop EoL Debian 9 support [\#292](https://github.com/voxpupuli/puppet-keepalived/pull/292) ([bastelfreak](https://github.com/bastelfreak))
+- Drop Puppet 6 support [\#286](https://github.com/voxpupuli/puppet-keepalived/pull/286) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add EL8 support [\#298](https://github.com/voxpupuli/puppet-keepalived/pull/298) ([bastelfreak](https://github.com/bastelfreak))
+- Add `terminate_delay` and `fork_delay` parameters to `keepalived::vrrp::track_process` [\#295](https://github.com/voxpupuli/puppet-keepalived/pull/295) ([trefzer](https://github.com/trefzer))
+- puppetlabs/concat: Allow 8.x & 9.x [\#293](https://github.com/voxpupuli/puppet-keepalived/pull/293) ([bastelfreak](https://github.com/bastelfreak))
+- Add Puppet 8 support [\#289](https://github.com/voxpupuli/puppet-keepalived/pull/289) ([bastelfreak](https://github.com/bastelfreak))
+- puppetlabs/stdlib: Allow 9.x [\#288](https://github.com/voxpupuli/puppet-keepalived/pull/288) ([bastelfreak](https://github.com/bastelfreak))
+- Improve track\_file handling and enable vrrp\_track\_file for keepalived \< 2.1.0 [\#282](https://github.com/voxpupuli/puppet-keepalived/pull/282) ([bluthg](https://github.com/bluthg))
+
+**Fixed bugs:**
+
+- Dashes in VRRP instance names can cause fragment ordering troubles [\#302](https://github.com/voxpupuli/puppet-keepalived/issues/302)
+- Improve collect\_unicast\_peers [\#305](https://github.com/voxpupuli/puppet-keepalived/pull/305) ([frank-f](https://github.com/frank-f))
+- Avoid messing up fragment ordering if instance name contains dashes [\#303](https://github.com/voxpupuli/puppet-keepalived/pull/303) ([frank-f](https://github.com/frank-f))
+
+**Merged pull requests:**
+
+- Remove legacy top-scope syntax [\#300](https://github.com/voxpupuli/puppet-keepalived/pull/300) ([smortex](https://github.com/smortex))
+
 ## [v3.6.0](https://github.com/voxpupuli/puppet-keepalived/tree/v3.6.0) (2023-01-27)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-keepalived/compare/v3.5.0...v3.6.0)

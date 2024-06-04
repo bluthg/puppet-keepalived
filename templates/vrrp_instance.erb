@@ -97,42 +97,42 @@ vrrp_instance <%= @_name %> {
     auth_pass <%= @auth_pass_unsensitive %>
   }
   <%- end -%>
-  <%- if @track_script -%>
+  <%- unless @track_script.empty? -%>
 
   track_script {
-  <%- Array(@track_script).each do |track| -%>
+  <%- Array(@track_script).flatten.each do |track| -%>
     <%= track %>
   <%- end -%>
   }
   <%- end -%>
-  <%- if @track_process -%>
+  <%- unless @track_process.empty? -%>
 
   track_process {
-  <%- Array(@track_process).each do |track| -%>
+  <%- @track_process.each do |track| -%>
     <%= track %>
   <%- end -%>
   }
   <%- end -%>
-  <%- if @track_file -%>
+  <%- unless @track_file.empty? -%>
 
   track_file {
-  <%- Array(@track_file).each do |track| -%>
+  <%- @track_file.each do |track| -%>
     <%= track %>
   <%- end -%>
   }
   <%- end -%>
-  <%- if @vrrp_track_file -%>
+  <%- unless @vrrp_track_file.empty? -%>
 
   vrrp_track_file {
-  <%- Array(@vrrp_track_file).each do |track| -%>
+  <%- @vrrp_track_file.each do |track| -%>
     <%= track %>
   <%- end -%>
   }
   <%- end -%>
-  <%- if @track_interface -%>
+  <%- unless @track_interface.empty? -%>
 
   track_interface {
-  <%- Array(@track_interface).each do |interface| -%>
+  <%- @track_interface.each do |interface| -%>
     <%= interface %>
   <%- end -%>
   }
@@ -209,7 +209,7 @@ vrrp_instance <%= @_name %> {
   <%- end -%>
   }
   <%- end -%>
-  <%- if @virtual_rules -%>
+  <%- unless @virtual_rules.empty? -%>
 
   virtual_rules {
   <%-  @virtual_rules.each do |rule| -%>
@@ -224,4 +224,7 @@ vrrp_instance <%= @_name %> {
   <%- if @unicast_source_ip -%>
 
   unicast_src_ip <%= @unicast_source_ip %>
+  <%- elsif @unicast_src -%>
+
+  unicast_src_ip <%= @unicast_src %>
   <%- end -%>
